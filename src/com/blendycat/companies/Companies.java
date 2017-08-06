@@ -1,5 +1,6 @@
 package com.blendycat.companies;
 
+import com.blendycat.companies.sql.DBManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Companies extends JavaPlugin {
     public static Economy eco = null;
+    public static DBManager db;
 
     @Override
     public void onEnable(){
@@ -18,8 +20,10 @@ public class Companies extends JavaPlugin {
             return;
         }
         setupConfig();
+        saveConfig();
         saveDefaultConfig();
 
+        db = new DBManager(this);
     }
 
     @Override
