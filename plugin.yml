@@ -1,0 +1,10 @@
+name: Companies
+main: com.blendycat.companies.Companies
+version: 1.0
+author: BlendyCat
+commands:
+  company:
+    description: main command for companies
+    usage: /<command>
+    aliases: [comp]
+
