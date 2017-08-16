@@ -27,22 +27,30 @@ public class DBManager {
      */
     public DBManager(Companies main){
         FileConfiguration config = main.getConfig();
-        if(config.isSet("db_password") && config.isSet("db_username") && config.isSet("db_host")){
+        if(!config.isSet("db_password")
+                || !config.isSet("db_username")
+                || !config.isSet("db_host")
+                || !config.isSet("db_name")
+                || config.get("db_password").equals("")
+                || config.get("db_username").equals("")
+                || config.get("db_host").equals("")
+                || config.get("db_name").equals("")) {
+            main.getLogger().info("Database login is not configured! Disabling Companies 1.0");
             main.getPluginLoader().disablePlugin(main);
-            main.getLogger().warning("Database login is not configured! Disabling Companies 1.0");
         }
 
         //
         String dbUsername = config.getString("db_username");
         String dbPassword = config.getString("db_password");
         String dbHost = config.getString("db_host");
+        String dbName = config.getString("db_name");
 
         //sets the property's username
         cp.put("username", dbUsername);
         //sets the property's password
         cp.put("password", dbPassword);
         //initialize the DB connect URL
-        url = "jdbc:mysql://"+dbHost+"/";
+        url = "jdbc:mysql://"+dbHost+"/"+dbName;
     }
 
 
@@ -52,9 +60,10 @@ public class DBManager {
     public void startConnection(){
         try {
             connection = DriverManager.getConnection(url, cp);
+            main.getLogger().info("Connected to database successfully!");
         }
         catch(SQLException ex){
-            main.getLogger().severe(ex.getMessage());
+            main.getLogger().info("Failed to connect to database");
         }
     }
 
@@ -70,6 +79,7 @@ public class DBManager {
                         "PRIMARY KEY(ID)," +
                         "UNIQUE(CompanyName)) ENGINE = MyISAM;");
         createCompaniesTable.execute();
+        main.getLogger().info("created table!");
         }catch(SQLException ex){
             main.getLogger().severe(ex.getMessage());
         }

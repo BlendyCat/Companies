@@ -20,10 +20,12 @@ public class Companies extends JavaPlugin {
             return;
         }
         setupConfig();
-        saveConfig();
         saveDefaultConfig();
+        saveConfig();
 
         db = new DBManager(this);
+        db.startConnection();
+        db.createTables();
     }
 
     @Override
@@ -47,6 +49,7 @@ public class Companies extends JavaPlugin {
     }
 
     private void setupConfig(){
+        getConfig().options().copyDefaults(true);
         getConfig().addDefault("db_host", "");
         getConfig().addDefault("db_name", "");
         getConfig().addDefault("db_username","");
